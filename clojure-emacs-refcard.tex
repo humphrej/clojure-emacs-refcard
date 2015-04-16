@@ -1,329 +1,176 @@
-% Reference Card for Clojure emacs
+\documentclass[12pt,landscape]{article}
+\usepackage{multicol}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage[landscape]{geometry}
+\usepackage{hyperref}
 
-% Copyright (C) 1987, 1993, 1996-1997, 2001-2012
-%   Free Software Foundation, Inc.
-
-% Author:  Jasper Humphrey <jasper@specialprojectslab.com>
-
-% This is based on refcard.pdf distributed as part of GNU Emacs
-
-% GNU Emacs is free software: you can redistribute it and/or modify
-% it under the terms of the GNU General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-
-% GNU Emacs is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
-
-% You should have received a copy of the GNU General Public License
-% along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
-
-
-% This file is intended to be processed by plain TeX (TeX82).
+% To make this come out properly in landscape mode, do one of the following
+% 1.
+%  pdflatex latexsheet.tex
 %
-% The final reference card has six columns, three on each side.
-% This file can be used to produce it in any of three ways:
-% 1 column per page
-%    produces six separate pages, each of which needs to be reduced to 80%.
-%    This gives the best resolution.
-% 2 columns per page
-%    produces three already-reduced pages.
-%    You will still need to cut and paste.
-% 3 columns per page
-%    produces two pages which must be printed sideways to make a
-%    ready-to-use 8.5 x 11 inch reference card.
-%    For this you need a dvi device driver that can print sideways.
-% Which mode to use is controlled by setting \columnsperpage.
-%
-% To compile and print this document:
-% tex nrepl-refcard.tex
-% dvips -t landscape nrepl-refcard.dvi
-%
-%**start of header
-\newcount\columnsperpage
-\newcount\letterpaper
+% 2.
+%  latex latexsheet.tex
+%  dvips -P pdf  -t landscape latexsheet.dvi
+%  ps2pdf latexsheet.ps
 
-% This file can be printed with 1, 2, or 3 columns per page.
-% Specify how many you want here.
-\columnsperpage=3
 
-% Set letterpaper to 0 for A4 paper, 1 for letter (US) paper.  Useful
-% only when columnsperpage is 2 or 3.
-\letterpaper=0
+% If you're reading this, be prepared for confusion.  Making this was
+% a learning experience for me, and it shows.  Much of the placement
+% was hacked in; if you make it better, let me know...
 
-% PDF output layout.  0 for A4, 1 for letter (US), a `l' is added for
-% a landscape layout.
-\input pdflayout.sty
-\pdflayout=(0l)
 
-% Nothing else needs to be changed below this line.
+% 2008-04
+% Changed page margin code to use the geometry package. Also added code for
+% conditional page margins, depending on paper size. Thanks to Uwe Ziegenhagen
+% for the suggestions.
 
-\def\versionnrepl{1}           % version of Nrepl this is for
-\def\year{2013}                 % copyright year
+% 2006-08
+% Made changes based on suggestions from Gene Cooperman. <gene at ccs.neu.edu>
 
-\def\shortcopyrightnotice{\vskip 1ex plus 2 fill
-  \centerline{\small \copyright\ \year\ Jasper Humphrey.
-  Permissions on back.}}
 
-\def\copyrightnotice{
-\vskip 1ex plus 2 fill\begingroup\small
-\centerline{Copyright \copyright\ \year\ Jasper Humphrey.}
-\centerline{For GNU Emacs nREPL version \versionnrepl}
-\centerline{Designed by Jasper Humphrey}
+% To Do:
+% \listoffigures \listoftables
+% \setcounter{secnumdepth}{0}
 
-Permission is granted to make and distribute modified or unmodified
-copies of this card provided the copyright notice and this permission
-notice are preserved on all copies.
 
-\endgroup}
+% This sets page margins to .5 inch if using letter paper, and to 1cm
+% if using A4 paper. (This probably isn't strictly necessary.)
+% If using another size paper, use default 1cm margins.
+\ifthenelse{\lengthtest { \paperwidth = 11in}}
+	{ \geometry{top=.5in,left=.5in,right=.5in,bottom=.5in} }
+	{\ifthenelse{ \lengthtest{ \paperwidth = 297mm}}
+		{\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+		{\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+	}
 
-% make \bye not \outer so that the \def\bye in the \else clause below
-% can be scanned without complaint.
-\def\bye{\par\vfill\supereject\end}
+% Turn off header and footer
+\pagestyle{empty}
+ 
 
-\newdimen\intercolumnskip	%horizontal space between columns
-\newbox\columna			%boxes to hold columns already built
-\newbox\columnb
+% Redefine section commands to use less space
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%x
+                                {\normalfont\large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+                                {-1explus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%
+                                {\normalfont\normalsize\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {1ex plus .2ex}%
+                                {\normalfont\small\bfseries}}
+\makeatother
 
-\def\ncolumns{\the\columnsperpage}
+% Define BibTeX command
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
-\message{[\ncolumns\space
-  column\if 1\ncolumns\else s\fi\space per page]}
+% Don't print section numbers
+\setcounter{secnumdepth}{0}
 
-\def\scaledmag#1{ scaled \magstep #1}
 
-% This multi-way format was designed by Stephen Gildea October 1986.
-% Note that the 1-column format is fontfamily-independent.
-\if 1\ncolumns			%one-column format uses normal size
-  \hsize 4in
-  \vsize 10in
-  \voffset -.7in
-  \font\titlefont=\fontname\tenbf \scaledmag3
-  \font\headingfont=\fontname\tenbf \scaledmag2
-  \font\smallfont=\fontname\sevenrm
-  \font\smallsy=\fontname\sevensy
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
 
-  \footline{\hss\folio}
-  \def\makefootline{\baselineskip10pt\hsize6.5in\line{\the\footline}}
-\else				%2 or 3 columns uses prereduced size
-  \hsize 3.2in
-  \if 1\the\letterpaper
-     \vsize 7.95in
-  \else
-     \vsize 7.65in
-  \fi
-  \hoffset -.75in
-  \voffset -.745in
-  \font\titlefont=cmbx10 \scaledmag2
-  \font\headingfont=cmbx10 \scaledmag1
-  \font\smallfont=cmr6
-  \font\smallsy=cmsy6
-  \font\eightrm=cmr8
-  \font\eightbf=cmbx8
-  \font\eightit=cmti8
-  \font\eighttt=cmtt8
-  \font\eightmi=cmmi8
-  \font\eightsy=cmsy8
-  \textfont0=\eightrm
-  \textfont1=\eightmi
-  \textfont2=\eightsy
-  \def\rm{\eightrm}
-  \def\bf{\eightbf}
-  \def\it{\eightit}
-  \def\tt{\eighttt}
-  \if 1\the\letterpaper
-     \normalbaselineskip=.8\normalbaselineskip
-  \else
-     \normalbaselineskip=.7\normalbaselineskip
-  \fi
-  \normallineskip=.8\normallineskip
-  \normallineskiplimit=.8\normallineskiplimit
-  \normalbaselines\rm		%make definitions take effect
 
-  \if 2\ncolumns
-    \let\maxcolumn=b
-    \footline{\hss\rm\folio\hss}
-    \def\makefootline{\vskip 2in \hsize=6.86in\line{\the\footline}}
-  \else \if 3\ncolumns
-    \let\maxcolumn=c
-    \nopagenumbers
-  \else
-    \errhelp{You must set \columnsperpage equal to 1, 2, or 3.}
-    \errmessage{Illegal number of columns per page}
-  \fi\fi
+% -----------------------------------------------------------------------
 
-  \intercolumnskip=.46in
-  \def\abc{a}
-  \output={%			%see The TeXbook page 257
-      % This next line is useful when designing the layout.
-      %\immediate\write16{Column \folio\abc\space starts with \firstmark}
-      \if \maxcolumn\abc \multicolumnformat \global\def\abc{a}
-      \else\if a\abc
-        \global\setbox\columna\columnbox \global\def\abc{b}
-        %% in case we never use \columnb (two-column mode)
-        \global\setbox\columnb\hbox to -\intercolumnskip{}
-      \else
-        \global\setbox\columnb\columnbox \global\def\abc{c}\fi\fi}
-  \def\multicolumnformat{\shipout\vbox{\makeheadline
-      \hbox{\box\columna\hskip\intercolumnskip
-        \box\columnb\hskip\intercolumnskip\columnbox}
-      \makefootline}\advancepageno}
-  \def\columnbox{\leftline{\pagebody}}
+\begin{document}
 
-  \def\bye{\par\vfill\supereject
-    \if a\abc \else\null\vfill\eject\fi
-    \if a\abc \else\null\vfill\eject\fi
-    \end}
-\fi
+\raggedright
+\footnotesize
+\begin{multicols}{3}
 
-% we won't be using math mode much, so redefine some of the characters
-% we might want to talk about
-\catcode`\^=12
-\catcode`\_=12
 
-\chardef\\=`\\
-\chardef\{=`\{
-\chardef\}=`\}
+% multicol parameters
+% These lengths are set only within the two main columns
+%\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
 
-\hyphenation{mini-buf-fer}
-
-\parindent 0pt
-\parskip 1ex plus .5ex minus .5ex
-
-\def\small{\smallfont\textfont2=\smallsy\baselineskip=.8\baselineskip}
-
-% newcolumn - force a new column.  Use sparingly, probably only for
-% the first column of a page, which should have a title anyway.
-\outer\def\newcolumn{\vfill\eject}
-
-% title - page title.  Argument is title text.
-\outer\def\title#1{{\titlefont\centerline{#1}}\vskip 1ex plus .5ex}
-
-% section - new major section.  Argument is section name.
-\outer\def\section#1{\par\filbreak
-  \vskip 3ex plus 2ex minus 2ex {\headingfont #1}\mark{#1}%
-  \vskip 2ex plus 1ex minus 1.5ex}
-
-\newdimen\keyindent
-
-% beginindentedkeys...endindentedkeys - key definitions will be
-% indented, but running text, typically used as headings to group
-% definitions, will not.
-\def\beginindentedkeys{\keyindent=1em}
-\def\endindentedkeys{\keyindent=0em}
-\endindentedkeys
-
-% paralign - begin paragraph containing an alignment.
-% If an \halign is entered while in vertical mode, a parskip is never
-% inserted.  Using \paralign instead of \halign solves this problem.
-\def\paralign{\vskip\parskip\halign}
-
-% \<...> - surrounds a variable name in a code example
-\def\<#1>{{\it #1\/}}
-
-% kbd - argument is characters typed literally.  Like the Texinfo command.
-\def\kbd#1{{\tt#1}\null}	%\null so not an abbrev even if period follows
-
-% beginexample...endexample - surrounds literal text, such a code example.
-% typeset in a typewriter font with line breaks preserved
-\def\beginexample{\par\leavevmode\begingroup
-  \obeylines\obeyspaces\parskip0pt\tt}
-{\obeyspaces\global\let =\ }
-\def\endexample{\endgroup}
-
-% key - definition of a key.
-% \key{description of key}{key-name}
-% prints the description left-justified, and the key-name in a \kbd
-% form near the right margin.
-\def\key#1#2{\leavevmode\hbox to \hsize{\vtop
-  {\hsize=.75\hsize\rightskip=1em
-  \hskip\keyindent\relax#1}\kbd{#2}\hfil}}
-
-\newbox\metaxbox
-\setbox\metaxbox\hbox{\kbd{M-x }}
-\newdimen\metaxwidth
-\metaxwidth=\wd\metaxbox
-
-% metax - definition of a M-x command.
-% \metax{description of command}{M-x command-name}
-% Tries to justify the beginning of the command name at the same place
-% as \key starts the key name.  (The "M-x " sticks out to the left.)
-\def\metax#1#2{\leavevmode\hbox to \hsize{\hbox to .75\hsize
-  {\hskip\keyindent\relax#1\hfil}%
-  \hskip -\metaxwidth minus 1fil
-  \kbd{#2}\hfil}}
-
-% threecol - like "key" but with two key names.
-% for example, one for doing the action backward, and one for forward.
-\def\threecol#1#2#3{\hskip\keyindent\relax#1\hfil&\kbd{#2}\hfil\quad
-  &\kbd{#3}\hfil\quad\cr}
-
-%**end of header
-
-
-\title{Clojure Emacs Reference Card}
-
-\centerline{(for version \versionnrepl)}
+\begin{center}
+     \Large{\textbf{Clojure Emacs \\ Reference Card}} \\
+\end{center}.
 
 \section{Clojure Buffer}
-\key{Evalulate the form preceding point}{C-x C-e}
-\key{Evaluate the top level form under point}{C-M-x}
-\key{Evaluate the region}{C-c C-r}
-\key{Interrupt any pending evaluations}{C-c C-b}
-\key{Invoke macroexpand-1 on the form preceding point}{C-c C-m}
-\key{Invoke clojure.walk/macroexpand-all on the form preceding point}{C-c M-m}
-\key{Eval the ns form}{C-c C-n}
-\key{Switch the namespace of the repl buffer to the namespace of the current buffer}{C-c M-n}
-\key{Select the repl buffer}{C-c C-z}
-\key{Clear the entire REPL buffer, leaving only a prompt}{C-c M-o}
-\key{Load the current buffer}{C-c C-k}
-\key{Load a file}{C-c C-l}
-\key{Display doc string for the symbol at point}{C-c C-d}
-\key{Display the source for the symbol at point}{C-c C-s}
-\key{Display JavaDoc (in your default browser) for the symbol at point}{C-c C-j}
-\key{Jump to the definition of a var}{M-.}
-\key{Return to your pre-jump location}{M-,}
-\key{Complete the symbol at point}{M-TAB}
-\key{Slurp the next expression into this expression}{C-)}
-\key{Slurp the previous expression into this expression}{C-(}
-\key{Barf the current expression out to the right of its parent expression}{C-\}}
-\key{Barf the current expression out to the left of its parent expression}{C-\{}
+\begin{tabular}{p{6cm}p{1cm}} % {@{}ll@{}}
+	Evalulate the form preceding point    & \verb!C-x C-e!  \\
+	Evaluate the top level form under point & \verb!C-M-x! \\
+	Evaluate the region & \verb!C-c C-r! \\
+	Interrupt any pending evaluations & \verb!C-c C-b! \\
+	Invoke macroexpand-1 on the form preceding point & \verb!C-c C-m! \\
+	Invoke clojure.walk/macroexpand-all on the form preceding point & \verb!C-c M-m! \\
+	Eval the ns form & \verb!C-c C-n! \\
+	Switch the namespace of the repl buffer to the namespace of the current buffer & \verb!C-c M-n! \\
+	Select the repl buffer & \verb!C-c C-z! \\
+	Clear the entire REPL buffer, leaving only a prompt & \verb!C-c M-o! \\
+	Load the current buffer & \verb!C-c C-k! \\
+	Load a file & \verb!C-c C-l! \\
+	Display doc string for the symbol at point & \verb!C-c C-d! \\
+	Display the source for the symbol at point & \verb!C-c C-s! \\
+	Display JavaDoc (in your default browser) for the symbol at point & \verb!C-c C-j! \\
+	Jump to the definition of a var & \verb!M-.! \\
+	Return to your pre-jump location & \verb!M-,! \\
+	Complete the symbol at point & \verb!M-TAB! \\
+	Slurp the next expression into this expression & \verb!C-)! \\
+	Slurp the previous expression into this expression & \verb!C-(! \\
+	Barf the current expression out to the right of its parent expression & \verb!C-\}! \\
+	Barf the current expression out to the left of its parent expression & \verb!C-\{! \\
+	
+\end{tabular}
 
-\newcolumn
+
+%For spacing reasons - remove later
+\begin{center}
+	\\
+\end{center}.
+
 \section{REPL Buffer}
-\key{Evaluate the current input in Clojure if it is complete}{RET}
-\key{Close any unmatched parenthesis and then evaluate the current input in Clojure}{C-RET}
-\key{Open a new line and indent}{C-j}
-\key{Clear the entire REPL buffer, leaving only a prompt}{C-c M-o}
-\key{Remove the output of the previous evaluation from the REPL buffer}{C-c C-o}
-\key{Kill all text from the prompt to the current point}{C-c C-u}
-\key{Interrupt any pending evaluations}{C-c C-b}
-\key{Goto to previous input in history}{C-up}
-\key{Goto to next input in history}{C-down}
-\key{Search the previous item in history using the current input as search pattern}{M-p}
-\key{Search the next item in history using the current input as search pattern}{M-n}
-\key{Search {\bf forwards} through command history with regex}{M-s}
-\key{Search {\bf backwards} through command history with regex}{M-r}
-\key{Move between the current prompts in the REPL buffer}{C-c C-n}
-\key{Move between the previous prompts in the REPL buffer}{C-c C-p}
-\key{Complete symbol at point}{TAB}
-\key{Display doc string for the symbol at point}{C-c C-d}
-\key{Display JavaDoc (in your default browser) for the symbol at point}{C-c C-j}
+\begin{tabular}{p{6cm}p{1cm}} % {@{}ll@{}}
 
-\newcolumn
+  Evaluate the current input in Clojure if it is complete & \verb!RET! \\
+  Close any unmatched parenthesis and then evaluate the current input in Clojure & \verb!C-RET! \\
+  Open a new line and indent & \verb!C-j! \\
+  Clear the entire REPL buffer, leaving only a prompt & \verb!C-c M-o! \\
+  Remove the output of the previous evaluation from the REPL buffer & \verb!C-c C-o! \\
+  Kill all text from the prompt to the current point & \verb!C-c C-u! \\
+  Interrupt any pending evaluations & \verb!C-c C-b! \\
+  Goto to previous input in history & \verb!C-up! \\
+  Goto to next input in history & \verb!C-down! \\
+  Search the previous item in history using the current input as search pattern & \verb!M-p! \\
+  Search the next item in history using the current input as search pattern & \verb!M-n! \\
+  Search {\bf forwards } through command history with regex & \verb!M-s\}! \\
+  Search {\bf backwards} through command history with regex & \verb!M-r!\} \\
+  Move between the current prompts in the REPL buffer & \verb!C-c C-n! \\
+  Move between the previous prompts in the REPL buffer & \verb!C-c C-p! \\
+  Complete symbol at point & \verb!TAB! \\
+  Display doc string for the symbol at point & \verb!C-c C-d! \\
+  Display JavaDoc (in your default browser) for the symbol at point & \verb!C-c C-j! \\
+\end{tabular}
+
+
+
 
 \section{Macroexpansion Buffer}
-\key{Invoke macroexpand-1 on the form preceding point}{C-c C-m}
-\key{Invoke clojure.walk/macroexpand-all on the form preceding point}{C-c M-m}
-\key{The prior macroexpansion is performed again}{g}
-\key{Undo the last inplace expansion performed}{C-/, C-x u}
+\begin{tabular}{p{6cm}p{1cm}} % {@{}ll@{}}
+	
+	Invoke macroexpand-1 on the form preceding point & \verb!C-c C-m! \\
+	Invoke clojure.walk/macroexpand-all on the form preceding point & \verb!C-c M-m! \\
+	The prior macroexpansion is performed again & \verb!g! \\
+	Undo the last inplace expansion performed & \verb!C-/, C-x u! \\
+	
+\end{tabular}
 
-\copyrightnotice
+\rule{0.3\linewidth}{0.25pt}
+\scriptsize
 
-\bye
-
-% Local variables:
-% compile-command: "pdftex nrepl-refcard"
-% End:
+\href{https://github.com/humphrej/clojure-emacs-refcard}{https://github.com/humphrej/clojure-emacs-refcard}
+
+
+\end{multicols}
+\end{document}
