@@ -97,7 +97,7 @@
      \Large{\textbf{Clojure Emacs \\ Reference Card}} \\
 \end{center}.
 
-\section{Clojure Buffer}
+\section{Clojure Buffer}\smallskip \hrule height 2pt \smallskip
 \begin{tabular}{p{6cm}p{1cm}} % {@{}ll@{}}
 	Evalulate the form preceding point    & \verb!C-x C-e!  \\
 	Evaluate the top level form under point & \verb!C-M-x! \\
@@ -124,13 +124,16 @@
 	
 \end{tabular}
 
+\vfill
+\columnbreak
+
 
 %For spacing reasons - remove later
 \begin{center}
-	\\
+	
 \end{center}.
 
-\section{REPL Buffer}
+\section{REPL Buffer}\smallskip \hrule height 2pt \smallskip
 \begin{tabular}{p{6cm}p{1cm}} % {@{}ll@{}}
 
   Evaluate the current input in Clojure if it is complete & \verb!RET! \\
@@ -154,9 +157,10 @@
 \end{tabular}
 
 
+\vfill
+\columnbreak
 
-
-\section{Macroexpansion Buffer}
+\section{Macroexpansion Buffer}\smallskip \hrule height 2pt \smallskip
 \begin{tabular}{p{6cm}p{1cm}} % {@{}ll@{}}
 	
 	Invoke macroexpand-1 on the form preceding point & \verb!C-c C-m! \\
@@ -165,6 +169,17 @@
 	Undo the last inplace expansion performed & \verb!C-/, C-x u! \\
 	
 \end{tabular}
+
+\section{CIDER}\smallskip \hrule height 2pt \smallskip
+\begin{tabular}{p{5cm}p{1cm}} % {@{}ll@{}}
+	
+	Start Cider REPL & \verb!M-x cider-jack-in! \\
+	Connect Cider REPL & \verb!M-x cider-connect! \\
+	Close Cider REPL & \verb!M-x nrepl-close! \\
+	Close all connections & \verb!M-x cider-quit! \\
+	
+\end{tabular}
+
 
 \rule{0.3\linewidth}{0.25pt}
 \scriptsize
